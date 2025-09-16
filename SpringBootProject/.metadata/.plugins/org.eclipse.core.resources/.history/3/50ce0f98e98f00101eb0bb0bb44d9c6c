@@ -1,0 +1,50 @@
+package com.klef.labexam.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.klef.labexam.model.Product;
+import com.klef.labexam.service.ProductService;
+
+@RestController
+@CrossOrigin("*")
+@RequestMapping
+public class ProductController 
+{
+	
+	@Autowired
+	private ProductService service;
+	
+	@GetMapping("/")
+	public String Home()
+	{
+		return "We are in home page";
+	}
+	
+	@PostMapping("/add")
+	public String addProduct(@RequestBody Product p)
+	{
+		return service.addProduct(p);
+	}
+	
+	@GetMapping("/viewall")
+	public List<Product> viewallproducts()
+	{
+		return service.viewallproduct();
+	}
+	
+	@DeleteMapp("/delete/{tid}")
+	public String deleteteacher(@PathVariable int tid)
+	{
+		return service.deleteteacher(tid);
+	}
+	
+}
+

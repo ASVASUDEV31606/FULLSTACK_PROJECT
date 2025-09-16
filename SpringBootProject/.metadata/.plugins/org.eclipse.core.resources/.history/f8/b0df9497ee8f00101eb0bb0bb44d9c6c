@@ -1,0 +1,14 @@
+package com.klef.labexam;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class SpringBootExamProjectApplication extends sprin{
+
+	public static void main(String[] args) {
+		SpringApplication.run(SpringBootExamProjectApplication.class, args);
+		System.out.println("The project is successfully created");
+	}
+
+}

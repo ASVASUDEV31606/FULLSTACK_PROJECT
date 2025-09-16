@@ -1,0 +1,15 @@
+package com.klef.labexam.service;
+
+import java.util.List;
+
+import com.klef.labexam.model.Product;
+
+public interface ProductService 
+{
+	public String addProduct(Product p);
+	public String deleteproduct(int pid);
+	public List<Product> viewallproduct();
+	public String updateProduct(Product product);
+	public Product getProductById(int pid);
+
+}

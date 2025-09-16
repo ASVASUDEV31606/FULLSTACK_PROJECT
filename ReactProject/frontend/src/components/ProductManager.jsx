@@ -13,6 +13,12 @@ function ProductManager() {
     contact: "",
   });
   const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
+
+  // 🔍 Search states
+  const [searchId, setSearchId] = useState("");
+  const [searchResult, setSearchResult] = useState(null);
+  const [searchError, setSearchError] = useState("");
 
   // Function to fetch all products
   const fetchProducts = () => {
@@ -48,10 +54,7 @@ function ProductManager() {
         headers: { "Content-Type": "application/json" },
       })
       .then(() => {
-        // Refetch updated product list
-        fetchProducts();
-
-        // Clear the form
+        fetchProducts(); // Refresh list
         setNewProduct({
           id: "",
           name: "",
@@ -60,6 +63,7 @@ function ProductManager() {
           contact: "",
         });
         setError("");
+        setMessage("✅ Product added successfully!");
       })
       .catch((err) =>
         setError(
@@ -68,6 +72,36 @@ function ProductManager() {
             : "Failed to add product. Check console."
         )
       );
+  };
+
+  // Handle product deletion
+  const handleDelete = (pid) => {
+    axios
+      .delete(`${config.apiBaseUrl}/delete/${pid}`)
+      .then((response) => {
+        setMessage(response.data); // Backend returns success or failure message
+        fetchProducts(); // Refresh list
+      })
+      .catch(() => setError("❌ Failed to delete product"));
+  };
+
+  // Handle search by ID
+  const handleSearch = () => {
+    if (!searchId) {
+      setSearchError("⚠ Please enter a Product ID");
+      return;
+    }
+
+    axios
+      .get(`${config.apiBaseUrl}/product/${searchId}`)
+      .then((response) => {
+        setSearchResult(response.data);
+        setSearchError("");
+      })
+      .catch(() => {
+        setSearchResult(null);
+        setSearchError("❌ Product ID not found");
+      });
   };
 
   return (
@@ -124,8 +158,9 @@ function ProductManager() {
         <button type="submit">Add Product</button>
       </form>
 
-      {/* Error message */}
+      {/* Error / Success Messages */}
       {error && <p style={{ color: "red" }}>{error}</p>}
+      {message && <p style={{ color: "green" }}>{message}</p>}
 
       {/* Product List */}
       <h3>Product List</h3>
@@ -135,12 +170,74 @@ function ProductManager() {
             <li key={p.id || index}>
               ID: {p.id} | Name: {p.name} | Cost: ₹{p.cost} | Company:{" "}
               {p.company} | Contact: {p.contact}
+              {"  "}
+              <button
+                style={{
+                  marginLeft: "10px",
+                  backgroundColor: "red",
+                  color: "white",
+                  border: "none",
+                  padding: "4px 8px",
+                  cursor: "pointer",
+                }}
+                onClick={() => handleDelete(p.id)}
+              >
+                Delete
+              </button>
+              <button
+                style={{
+                  marginLeft: "10px",
+                  backgroundColor: "blue",
+                  color: "white",
+                  border: "none",
+                  padding: "4px 8px",
+                  cursor: "pointer",
+                }}
+                onClick={() => alert("Edit functionality coming soon!")}
+              >
+                Edit
+              </button>
             </li>
           ))
         ) : (
           <li>No products found</li>
         )}
       </ul>
+
+      {/* Search Product By ID */}
+      <h3>Search Product By ID</h3>
+      <div>
+        <input
+          type="number"
+          placeholder="Enter Product ID"
+          value={searchId}
+          onChange={(e) => setSearchId(e.target.value)}
+        />
+        <button
+          onClick={handleSearch}
+          style={{
+            marginLeft: "10px",
+            backgroundColor: "green",
+            color: "white",
+            border: "none",
+            padding: "4px 8px",
+            cursor: "pointer",
+          }}
+        >
+          Search
+        </button>
+      </div>
+
+      {searchResult && (
+        <div style={{ marginTop: "10px" }}>
+          <p>
+            <strong>Result:</strong> ID: {searchResult.id} | Name:{" "}
+            {searchResult.name} | Cost: ₹{searchResult.cost} | Company:{" "}
+            {searchResult.company} | Contact: {searchResult.contact}
+          </p>
+        </div>
+      )}
+      {searchError && <p style={{ color: "red" }}>{searchError}</p>}
     </div>
   );
 }

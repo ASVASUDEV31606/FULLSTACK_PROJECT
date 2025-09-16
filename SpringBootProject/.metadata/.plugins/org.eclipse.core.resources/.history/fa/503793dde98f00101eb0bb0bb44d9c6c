@@ -1,0 +1,45 @@
+package com.klef.labexam.service;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.klef.labexam.model.Product;
+import com.klef.labexam.repository.ProductRepository;
+
+@Service
+public class ProductServiceImpl implements ProductService
+{
+	@Autowired
+	private ProductRepository repository;
+	
+	public String addProduct(Product p) 
+	{
+		repository.save(p);
+		return "Product Added Successfully";
+	}
+	
+	public List<Product> viewallproduct() 
+	{
+		return repository.findAll();
+	}
+	
+	public String deleteteacher(int tid) 
+	{
+		Optional<Teacher> object = repository.findById(tid);
+		
+		String msg = null;
+		
+		if(object.isPresent())
+		{
+			Teacher t = object.get();
+			repository.delete(t);
+			msg = "Teacher Delete Successfully";
+		} else {
+			msg = "teacher ID is not found in the list";
+		}
+		return msg;
+	}
+
+}

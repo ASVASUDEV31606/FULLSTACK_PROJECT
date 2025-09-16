@@ -1,5 +1,5 @@
 const config = {
-  apiBaseUrl: "http://localhost:1947" // Spring Boot backend URL
+  apiBaseUrl: "http://localhost:2030/springbootproductapi" // Spring Boot backend URL
 };
 
 export default config;
